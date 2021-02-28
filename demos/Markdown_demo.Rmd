@@ -1,0 +1,60 @@
+---
+output: 
+  html_document:
+    css: custom_styles.css
+params:
+  park_code: ACAD
+  long_name: Acadia National Park
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libs, echo = FALSE, results = 'hide', message = FALSE}
+library(tidyverse) 
+library(forestNETN) # for theme_FHM()
+library(kableExtra) # for extra styling options in kable
+```
+
+```{r prep_data, echo = FALSE, results = 'hide'}
+reg_df <- read.csv("NETN_regen_dens.csv")
+
+head(reg_df)
+table(reg_df$Unit_Code, reg_df$cycle)
+table(complete.cases(reg_df$tot_regen))
+
+reg_sum <- reg_df %>% filter(Unit_Code == params$park_code) %>% 
+                      group_by(cycle) %>% 
+                      summarize(avg_regen = mean(tot_regen),
+                                se_regen = sd(tot_regen)/sqrt(n()),
+                                num_plots = n())
+
+reg_plot <- ggplot(data = reg_sum, aes(x = cycle, y = avg_regen))+
+              geom_bar(stat = 'identity', fill = '#7DAF8B')+
+              geom_errorbar(aes(ymin = avg_regen - 2*se_regen, 
+                                ymax = avg_regen + 2*se_regen), 
+                            color = "#818181")+
+              labs(y = "Stems per ha", x = "Cycle")+
+              theme_FHM()
+
+```
+
+# Introduction 
+
+### Background
+
+This file demonstrates how to use R Markdown using an example data set based on `r unique(reg_sum$num_plots)` forest plots from `r params$long_name`. This section will render as text (html tag body). The previous sections render as html header level 1 and 2. 
+
+```{r, regplot, echo = FALSE, fig.cap = paste("Figure 1. Plot of regeneration stem densities by cycle in", params$long_name, "."), out.width="80%"}
+
+reg_plot
+
+```
+
+```{r regtable, echo = FALSE}
+kable(reg_sum, format = "html", digits = 1, align = 'c', col.names = c("Cycle", "Mean", "SE", "# Plots"),
+  caption = paste("Table 1. Regeneration stem densities by cycle in", params$long_name, ".")) %>% 
+  kable_styling(bootstrap_options = c("striped", "bordered", "condensed"))
+
+```
+
