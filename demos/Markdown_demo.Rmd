@@ -12,14 +12,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r libs, echo = FALSE, results = 'hide', message = FALSE}
 library(tidyverse) 
-library(forestNETN) # for theme_FHM()
+library(forestNETNarch) # for theme_FHM()
 library(kableExtra) # for extra styling options in kable
 ```
 
 ```{r prep_data, echo = FALSE, results = 'hide'}
+# Load regeneration density dataset
 reg_df <- read.csv("NETN_regen_dens.csv")
 
-head(reg_df)
+# check the data
 table(reg_df$Unit_Code, reg_df$cycle)
 table(complete.cases(reg_df$tot_regen))
 
