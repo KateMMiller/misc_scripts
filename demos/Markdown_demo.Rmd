@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r libs, echo = FALSE, results = 'hide', message = FALSE}
 library(tidyverse) 
 library(forestNETNarch) # for theme_FHM()
+library(knitr) # for kable
 library(kableExtra) # for extra styling options in kable
 ```
 
