@@ -3,8 +3,8 @@ output:
   html_document:
     css: custom_styles.css
 params:
-  park_code: ACAD
-  long_name: Acadia National Park
+  park_code: MORR
+  long_name: Morristown National Historical Park
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -17,7 +17,7 @@ library(knitr) # for kable
 library(kableExtra) # for extra styling options in kable
 ```
 
-```{r prep_data, echo = FALSE, results = 'hide'}
+```{r prep_data, echo = TRUE, results = 'hide'}
 # Load regeneration density dataset
 reg_df <- read.csv("NETN_regen_dens.csv")
 
