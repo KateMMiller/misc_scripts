@@ -1,0 +1,49 @@
+---
+output: 
+  powerpoint_presentation:
+    reference_doc: photopoint_template.pptx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.width = 5.63, 
+                      fig.height = 7.5)
+```
+
+```{r imports, include = FALSE}
+library(tidyverse)
+library(magick)
+library(stringr)
+
+path = "C:/NETN/Monitoring_Projects/Freshwater_Wetland/2018/Photopoints"
+list.files(path)
+
+full_names <- list.files(path, pattern = 'JPG$', full.names = TRUE)
+full_names <- full_names[grepl("360L|090L|180L|270L", full_names)]
+
+photo_name = list.files(path, pattern = 'JPG$', full.names = FALSE)
+photo_name <- photo_name[grepl("360L|090L|180L|270L", photo_name)]
+
+photo_cap = paste0("RAM-", substr(photo_name, 5, 6), " ",
+                   case_when(grepl("360L", photo_name) ~ paste0("North (360)"),
+                             grepl("090L", photo_name) ~ paste0("East (090)"),
+                             grepl("180L", photo_name) ~ paste0("South (180)"),
+                             grepl("270L", photo_name) ~ paste0("West (270)"),
+                             TRUE ~ paste0("NONE")))
+
+photo_cap[!grepl("NONE", photo_cap)]
+
+# photo size: 5.63" tall x 7.5" wide
+photo_fun <- function(photo, cap){
+  cat("## ", "\n")
+  cat(paste0('![', cap, '](', photo, '){width=7.5}'))
+  cat("\n")
+  cat("\n")
+  }
+```
+
+```{r photos, results = 'asis'}
+
+purrr::walk2(full_names, photo_cap, ~photo_fun(.x, .y))
+```
+
